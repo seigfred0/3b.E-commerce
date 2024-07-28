@@ -1,47 +1,38 @@
 import './featuredProducts.scss';
 import Card from '../Card/Card';
-
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import useFetch from '../../hooks/useFetch';
 
 function FeaturedProducts({type}) {
 
-    const data = [
-        {
-            id: 1,
-            img: "https://images.pexels.com/photos/1163194/pexels-photo-1163194.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            img2: "https://images.pexels.com/photos/1844012/pexels-photo-1844012.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            title: "Coat Long Sleeve",
-            isNew: true,
-            oldPrice: 19,
-            price: 12
-        },
-        {
-            id: 2,
-            img: "https://images.pexels.com/photos/3035875/pexels-photo-3035875.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            img2: "",
-            title: "Blouse Shirt",
-            isNew: true,
-            oldPrice: 19,
-            price: 12
-        },
-        {
-            id: 3,
-            img: "https://images.pexels.com/photos/1040424/pexels-photo-1040424.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            img2: "",
-            title: "Summer Fit Shirt",
-            isNew: false,
-            oldPrice: 19,
-            price: 12
-        },
-        {
-            id: 4,
-            img: "https://images.pexels.com/photos/2250526/pexels-photo-2250526.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-            img2: "",
-            title: "Date Night Outfit",
-            isNew: false,
-            oldPrice: 19,
-            price: 12
-        }
-    ]
+    // const [data,setData] = useState([])
+    // const [products, setProducts] = useState([]);
+
+    // useEffect(()=> {
+    //     const apiUrl = import.meta.env.VITE_API_URL;
+    //     const apiToken = import.meta.env.VITE_API_TOKEN;
+        
+
+    //     const fetchData = async () => {
+    //         try {
+    //             const res = await axios.get(apiUrl+`/products?populate=*&[filters][type][$eq]=${type}`, {
+    //                 headers: {
+    //                     Authorization: "bearer " + apiToken
+    //                 }
+    //             });
+    //             setData(res.data.data)
+    //             console.log(res.data.data)
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     }
+
+    //     fetchData()
+    // }, [])
+
+    const { data, loading, error } = useFetch(`/products?populate=*&[filters][type][$eq]=${type}`);
+
 
     return(
         <div className="featuredProducts">
@@ -56,7 +47,8 @@ function FeaturedProducts({type}) {
                 </p>
             </div>
             <div className="bottom">
-                {data.map(item => {
+                { error ? "Something is wrong" :
+                loading ? "loading" : data?.map(item => {
                     return <Card  item={item} key={item.id}/>
                 })}
             </div>

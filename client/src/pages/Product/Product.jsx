@@ -3,28 +3,32 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BalanceIcon from "@mui/icons-material/Balance";
 import './product.scss'
+import { useParams } from 'react-router-dom';
+import useFetch from '../../hooks/useFetch';
 function ProductPage() {
 
-    const [selectedImg, setSelectedImg] = useState(0)
+    const id = useParams().id;
+    const [selectedImg, setSelectedImg] = useState("img")
     const [quantity, setQuantity] = useState(1)
     
 
-    const imgs = [
-        "https://images.pexels.com/photos/1163194/pexels-photo-1163194.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        "https://images.pexels.com/photos/1844012/pexels-photo-1844012.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    ]
+    const {data, loading, error} = useFetch(
+        `/products/${id}?populate=*`
+    )
 
-
+    
 
     return(
         <div className="product">
-            <div className="left">
+           {loading ? ("loading")
+           : (<>
+           <div className="left">
                 <div className="images">
-                    <img src={imgs[0]} alt="" onClick={e=> setSelectedImg(0)}/>
-                    <img src={imgs[1]} alt="" onClick={e=> setSelectedImg(1)}/>
+                    <img src={import.meta.env.VITE_UPLOAD_URL + data?.attributes?.img?.data?.attributes?.url} alt="" onClick={e=> setSelectedImg("img")}/>
+                    <img src={import.meta.env.VITE_UPLOAD_URL + data?.attributes?.img2?.data.attributes.url} alt="" onClick={e=> setSelectedImg("img2")}/>
                 </div>
-                <div className="mainImgs">
-                    <img src={imgs[selectedImg]} alt="" />
+                <div className="mainImg">
+                    <img src={import.meta.env.VITE_UPLOAD_URL + data?.attributes[selectedImg].data.attributes.url} alt="" />
                 </div>
 
             </div>
@@ -64,6 +68,7 @@ function ProductPage() {
                     <span>FAQ</span>
                 </div>
             </div>
+            </>)}
         </div>
     )
 }
